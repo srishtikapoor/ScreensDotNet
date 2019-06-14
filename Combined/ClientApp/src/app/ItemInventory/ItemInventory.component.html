@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<h2 style="text-align:center">Item Inventory</h2>
+<form (ngSubmit)="SaveItemInventory()" #formData="ngForm">
+
+  <label>Select Item</label>
+  <select [(ngModel)]="itemInventoryDataModel.ItemID" name="ItemID">
+    <option *ngFor="let item of items" value="{{item.itemID}}">
+      {{item.itemName}}
+    </option>
+  </select>
+
+  <div class="form-group">
+    <label>Quantity</label>
+    <input [(ngModel)]="itemInventoryDataModel.ItemQuantity" type="text" class="form-control" name="ItemQuantity" maxlength="5" pattern="\d*" #ItemQuantity="ngModel" required>
+    <div [hidden]="ItemQuantity.valid||ItemQuantity.pristine" class="alert alert-danger">
+      Quantity required
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Rate</label>
+    <input [(ngModel)]="itemInventoryDataModel.ItemRate" type="text" class="form-control" name="ItemRate" maxlength="5" pattern="\d*" #ItemRate="ngModel" required>
+    <div [hidden]="ItemRate.valid||ItemRate.pristine" class="alert alert-danger">
+      Rate required
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="!formData.form.valid||isDisabled" class="btn btn-primary">Save</button>
+</form>
+<br>
+<label>Search here</label> <input [(ngModel)]="searchText" placeholder="Type here for search" style="margin-top:50px;" class="advancedSearchTextbox">
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Inventory ID </th>
+      <th>Item Name</th>
+      <th>Rate</th>
+      <th>Quantity</th>
+      <th>Create Date</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let arr of itemsInventory | filter: {itemInventoryID: searchText, itemName: searchText,  itemRate: searchText, itemQuantity:searchText, createDate:searchText }">
+      <td>{{ arr.itemInventoryID }}</td>
+      <td><a href="#" data-toggle="modal" data-target="#viewModal" (click)="openDetails(arr)">{{ arr.itemName }}</a></td>
+      <td>{{ arr.itemRate }}</td>
+      <td>{{ arr.itemQuantity }}</td>
+      <td>{{ arr.createDate | date : "dd.MM.y" }}</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<div class="modal" id="viewModal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <form style="margin-top:40px;" id="PopupForm">
+        <button class="close" data-dismiss="modal" style="margin-right:20px;">&times;</button>
+        <div style="text-align:center;font-size:large">Do You Want To Edit?</div>
+        <hr />
+
+        <label style="margin-left:70px;">Quantity:</label>
+        <input [(ngModel)]="UpdateItemModel.itemQuantity" name="ItemQuantity" type="number" style="width:65px;margin-left:10px;" required />
+        <br /><br />
+        <label style="margin-left:70px;">Rate:</label>
+        <input [(ngModel)]="UpdateItemModel.itemRate" name="ItemRate" type="number" style="width:65px;margin-left:37px;" required />
+        <br />
+
+
+        <input (click)="Update()" type="button" data-dismiss="modal" class="btn-primary" style="margin-left:270px;margin-bottom:20px;" value="Update" />
+
+      </form>
+    </div>
+  </div>
+</div>
+
+

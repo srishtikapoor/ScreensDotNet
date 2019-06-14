@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<h2 style="align-content:center">Add an Item</h2>
+<form (ngSubmit)="SaveItem()" #formData="ngForm">
+
+  <label>Category</label>
+  <select [(ngModel)]="categoryDataModel.CategoryID" name="CategoryID">
+    <option *ngFor="let category of categories" value="{{category.categoryID}}">
+      {{category.categoryName}}
+    </option>
+  </select>
+
+  <div class="form-group">
+    <label>Item</label>
+    <input [(ngModel)]="categoryDataModel.ItemName" type="text" class="form-control" name="ItemName" #ItemName="ngModel" required>
+    <div [hidden]="ItemName.valid||ItemName.pristine" class="alert alert-danger">
+      Item required
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="!formData.form.valid ||isDisabled" class="btn btn-primary">Save</button>
+</form>
+<br>
+<label>Search here</label><input [(ngModel)]="searchText" placeholder="Type here for search" style="margin-top:50px;" class="advancedSearchTextbox">
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Item ID </th>
+      <th>Item Name</th>
+      <th>Category Name</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let item of items| filter: {itemID: searchText, itemName: searchText,  categoryName: searchText}">
+      <td>{{ item.itemID }}</td>
+      <td><a title="Click here to update" (click)="UpdateValues(item)">{{ item.itemName}}</a></td>
+      <td>{{ item.categoryName}}</td>
+    </tr>
+  </tbody>
+</table>
